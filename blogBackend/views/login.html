@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Post form</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -10,15 +10,15 @@
 <body>
 
 <div class="container">
-    <h2>Vertical (basic) form</h2>
-    <form action="/addPost">
+    <h2>Post </h2>
+    <form action="/login" method="post">
         <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" class="form-control" id="title" placeholder="Enter Title" name="title">
+            <label for="email">Email:</label>
+            <input type="text" class="form-control" id="email"  name="email">
         </div>
         <div class="form-group">
-            <label for="img">Select Image:</label>
-            <input type="file" class="form-control" id="img" placeholder="select Image" name="pwd">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password"  name="password">
         </div>
 
         <button type="submit" class="btn btn-success">Submit</button>
@@ -27,3 +27,4 @@
 
 </body>
 </html>
+
