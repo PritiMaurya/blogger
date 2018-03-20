@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../api.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-registration',
@@ -12,7 +13,13 @@ export class RegistrationComponent implements OnInit {
   genders = ['Male', 'Female'];
   file;
   inserData;
-  constructor(private service: ApiService) { }
+  constructor(private service: ApiService, private router: Router) {
+    if (localStorage.getItem('token')) {
+      router.navigate(['/profile']);
+    } else {
+      router.navigate(['/form']);
+    }
+  }
 
   ngOnInit() {
     this.userForm = new FormGroup({

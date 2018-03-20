@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../api.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,13 @@ import {ApiService} from "../api.service";
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginData;
-  constructor(private service: ApiService) { }
+  constructor(private service: ApiService, private router: Router) {
+    if (localStorage.getItem('token')) {
+      router.navigate(['/profile']);
+    } else {
+      router.navigate(['/login']);
+    }
+  }
 
   ngOnInit() {
     this.loginForm = new FormGroup({

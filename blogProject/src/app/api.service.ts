@@ -4,14 +4,16 @@ import {Router} from "@angular/router";
 
 @Injectable()
 export class ApiService {
-  errMsg: boolean = false;
+  errMsg = false;
   loginStatus: boolean;
   result;
   data;
-  flag;
+  getProfileData;
+  allPost;
+  baseUrl = 'http://localhost:3001';
   constructor(private http: HttpClient, private router: Router) { }
   signUp(data) {
-    this.http.post('http://localhost:3001/signup', data).subscribe(
+    this.http.post(this.baseUrl + '/signup', data).subscribe(
       (result) => {
         if (result !== null) {
           console.log('Successfully Register');
@@ -30,7 +32,7 @@ export class ApiService {
   }
 
   signIn(data) {
-    this.http.post('http://localhost:3001/login', data).subscribe(
+    this.http.post(this.baseUrl + '/login', data).subscribe(
       (result) => {
         if (result !== null) {
           console.log('Successfully Login');
@@ -55,7 +57,7 @@ export class ApiService {
 
   checkToken() {
     const token = localStorage.getItem('token');
-    return this.http.get('http://localhost:3001/check?token=' + token).subscribe(
+    return this.http.get(this.baseUrl + '/check?token=' + token).subscribe(
       (res) => {
         this.data = res;
         console.log('auth');
@@ -71,22 +73,36 @@ export class ApiService {
 
   getData() {
     const token = localStorage.getItem('token');
-    return this.http.get('http://localhost:3001/getData?token=' + token);
+    this.http.get(this.baseUrl + '/getData?token=' + token).subscribe(
+      (res) => {
+        this.getProfileData = res[0];
+        console.log(this.getProfileData);
+        this.selectAllPost(this.getProfileData._id);
+      }
+    );
   }
 
   addPost(data) {
-    this.http.post('http://localhost:3001/addPost', data).subscribe(
+    return this.http.post(this.baseUrl + '/addPost', data);
+  }
+
+  deletePost(id) {
+    this.http.get(this.baseUrl + '/deletePost/?id=' + id).subscribe(
       (res) => {
-        console.log(res);
-      },
-      (err) => {
-        console.log(err);
+        console.log('one post deleted');
+        this.selectAllPost(this.getProfileData._id);
       }
     );
   }
 
   selectAllPost(id) {
     console.log('selectAllPost call');
-    return this.http.get('http://localhost:3001/getPost/?id=' + id);
+    this.http.get(this.baseUrl + '/getPost/?id=' + id).subscribe(
+      (res) => {
+        console.log('get all data of post');
+        this.allPost = res;
+        console.log(res);
+      }
+    );
   }
 }

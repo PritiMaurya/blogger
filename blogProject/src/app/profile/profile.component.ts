@@ -1,82 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import { FormGroup, Validators, FormControl} from '@angular/forms';
+import {DialogService} from "ng2-bootstrap-modal";
+import {DialogModalComponent} from "../modals/dialog-modal/dialog-modal.component";
+import {ConfirmModalComponent} from "../modals/confirm-modal/confirm-modal.component";
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  profileData;
-  file;
-  postData;
-  postFrom: FormGroup;
-  selectedPost = {};
 
-  constructor(private service: ApiService) {}
+  constructor(private service: ApiService, private dialogService: DialogService) {
+    this.service.getData();
+  }
 
   ngOnInit() {
-    this.postFrom = new FormGroup({
-      status: new FormControl('', Validators.required),
-      postImg: new FormControl('')
-    });
 
-    this.getProfileData();
-  }
-  onPost() {
-    this.postData = {
-      status: this.postFrom.get('status').value,
-      img: this.postFrom.get('postImg').value.value,
-      id: this.profileData._id
-    }
-    this.service.addPost(this.postData);
-    // console.log(this.postData);
   }
 
-  changePost(event) {
-    console.log('change call');
-    const reader = new FileReader;
-    if (event.target.files && event.target.files.length > 0) {
-      this.file = event.target.files[0];
-      reader.readAsDataURL(this.file);
-      reader.onload = () => {
-        this.postFrom.get('postImg').setValue({
-          name: this.file.name,
-          type: this.file.type,
-          value: reader.result.split(',')[1]
-        });
-      };
-      }
-  }
-
-  selectPost() {
-    const id = this.profileData._id;
-      this.service.selectAllPost(id).subscribe(
-        (data) => {
-          this.selectedPost = data;
-          // console.log(typeof this.selectedPost);
-          // console.log(this.selectedPost);
-        },
-        (err) => {
-          console.log(err);
+  deletePost(id) {
+    this.dialogService.addDialog(ConfirmModalComponent, {title: 'Delete Post', message: 'Are you sure to delete this post'}).subscribe(
+      (data) => {
+        if (data) {
+          this.service.deletePost(id);
         }
-      );
-  }
-
-  getProfileData() {
-    // console.log('get Profile call');
-    this.service.getData().subscribe(
-      (res) => {
-        console.log(res);
-        this.profileData = res[0];
-        this.selectPost();
       }
     );
   }
 
-  onConfirm() {
-    console.log('yes');
+  showAddPostDialog() {
+    this.dialogService.addDialog(DialogModalComponent, {title: 'Add Post' , title2: 'Add', id: this.service.getProfileData._id});
   }
 
-
+  // updatePostDialog(id) {
+  //   this.dialogService.addDialog(DialogModalComponent, {title: 'Update Post', title2: 'Update', id: id});
+  // }
 }

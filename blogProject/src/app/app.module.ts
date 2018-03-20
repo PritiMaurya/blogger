@@ -11,6 +11,11 @@ import {HttpClientModule} from "@angular/common/http";
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import {AuthGuard} from "./auth.guard";
+import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
+import {BootstrapModalModule} from "ng2-bootstrap-modal";
+import { DialogModalComponent } from './modals/dialog-modal/dialog-modal.component';
+import { HeaderComponent } from './header/header.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 
 @NgModule({
@@ -18,14 +23,24 @@ import {AuthGuard} from "./auth.guard";
     AppComponent,
     RegistrationComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    ConfirmModalComponent,
+    DialogModalComponent,
+    HeaderComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     FormsModule,
     RouteModule,
-    HttpClientModule
+    HttpClientModule,
+    BootstrapModalModule,
+    BootstrapModalModule.forRoot({container: document.body})
+  ],
+  entryComponents: [
+    DialogModalComponent,
+    ConfirmModalComponent
   ],
   providers: [ApiService, AuthGuard],
   bootstrap: [AppComponent]
