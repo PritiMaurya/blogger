@@ -23,7 +23,6 @@ app.use(cors());
 //     next();
 // });
 
-//app.options('*', cors());
 app.use(session({ secret: 'priti123', resave: true, saveUninitialized: true}));
 
 
@@ -232,9 +231,23 @@ app.post('/addPost', (req,res)=>{
 
 app.get('/getPost',(req,res)=>{
     var id = req.query.id;
-    Post.find({userId:id}).then(
+    Post.find({userId:id, isDelete:false}).then(
         (data)=>{
-            console.log(data);
+            console.log('All post data');
+            res.send(data);
+        },
+        (err)=>{
+            res.status(404).send(err);
+        }
+    );
+});
+
+app.get('/deletePost',(req,res)=>{
+    var id = req.query.id;
+    var data = {isDelete: true};
+    Post.findByIdAndUpdate({_id:id},{$set: data}).then(
+        (data)=>{
+            console.log('All post data');
             res.send(data);
         },
         (err)=>{
@@ -281,15 +294,6 @@ app.listen(3001);
 // }
 
 
-// app.post('/login', function(req, res, next) {
-//     passport.authenticate('local', function(err, user, info) {
-//         if (err) { return next(err); }
-//         if (!user) { return res.redirect('/login'); }
-//         req.logIn(user, function(err) {
-//             if (err) { return next(err); }
-//             return res.redirect('/users/' + user.username);
-//         });
-//     })(req, res, next);
-// });
+
 
 
